@@ -6,9 +6,9 @@ namespace Zadanie1
 {
     public class Set
     {
-        public int beginning, end;
+        public long beginning, end;
 
-        public Set(int x,int y)
+        public Set(long x,long y)
         {
             beginning = x;
             end = y;

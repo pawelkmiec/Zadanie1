@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Zadanie1
 {
@@ -8,6 +9,8 @@ namespace Zadanie1
     {
         static void Main(string[] args)
         {
+            Stopwatch stopwatch = new Stopwatch();
+
             StreamReader file = new StreamReader("in.txt");
             List<Set> sets = new List<Set>();
 
@@ -16,25 +19,29 @@ namespace Zadanie1
             
             string data = file.ReadLine();
 
+            stopwatch.Start();
             while(data != null)
             {
                 Set set = new Set();
 
                 string[] values = data.Split(' ');
                
-                set.beginning = Int32.Parse(values[0]);
-                set.end = Int32.Parse(values[1]);
-
+                set.beginning = Int64.Parse(values[0]);
+                set.end = Int64.Parse(values[1]);
+               
                 sets.Add(set);
                 data = file.ReadLine();
             }
-            
+            stopwatch.Stop();
+            Console.WriteLine($"Wczytywanie z pliku:{stopwatch.ElapsedMilliseconds}");
+
+            stopwatch.Start();
             void quick_sort(List<Set> sets,int left,int right)
             {
                 if (right <= left) return;
 
-                int i = left - 1, j = right + 1,
-                    pivot = sets[(left + right) / 2].beginning;
+                int i = left - 1, j = right + 1;
+                long   pivot = sets[(left + right) / 2].beginning;
 
                 while(true)
                 {
@@ -56,31 +63,43 @@ namespace Zadanie1
             }
 
             quick_sort(sets, 0, sets_count - 1);
+            stopwatch.Stop();
+            Console.WriteLine($"Sortowanie:{stopwatch.ElapsedMilliseconds}");
 
-            Console.WriteLine("Posortowane zbiory:");
+            //Console.WriteLine("Posortowane zbiory:");
 
-            for (int i = 0; i < sets.Count; i++)
-            {
-                Console.WriteLine($"{i}. {sets[i].beginning} {sets[i].end}");
-            }
-            Console.WriteLine();
+            //for (int i = 0; i < sets.Count; i++)
+            //{
+            //    Console.WriteLine($"{i}. {sets[i].beginning} {sets[i].end}");
+            //}
+            //Console.WriteLine();
+
             int index = 0;
 
-            while (true) 
+            List<Set> result = new List<Set>();
+
+            stopwatch.Start();
+
+            while (sets.Count != index + 1) 
             {
-                if (sets[index].end >= sets[index + 1].beginning)
+                var current = sets[index];
+                var next = sets[index + 1];
+
+                if (current.end >= next.beginning)
                 {
-                    if (sets[index].end < sets[index + 1].end)
+                    if (current.end < next.end)
                     {
-                        sets[index + 1].beginning = sets[index].beginning;                      
-                        sets.Remove(sets[index]);
+                       next.beginning = current.beginning;
+                        
+                       sets.Remove(current);
                     }
                     else
                     {
-                        sets[index + 1].beginning = sets[index].beginning;
-                        sets[index + 1].end = sets[index].end;
+                        next.beginning = current.beginning;
+                        next.end = current.end;
                         
-                        sets.Remove(sets[index]);
+                        sets.Remove(current);
+
                     }
                 }
                 else
@@ -90,7 +109,11 @@ namespace Zadanie1
                         break;
                 }
             }
-      
+
+            stopwatch.Stop();
+            
+            Console.WriteLine($"Wynik:{stopwatch.ElapsedMilliseconds}");
+
             Console.WriteLine(Environment.NewLine +"Wynik:");
 
             for (int i = 0; i < sets.Count; i++)
