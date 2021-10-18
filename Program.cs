@@ -74,52 +74,86 @@ namespace Zadanie1
             //}
             //Console.WriteLine();
 
-            int index = 0;
+            int index = 1;
 
             List<Set> result = new List<Set>();
+            
+            result.Add(new Set(sets[0].beginning, sets[0].end));
+
+            var EndToCompare = result[result.Count - 1].end;
 
             stopwatch.Start();
 
-            while (sets.Count != index + 1) 
+            while (sets.Count != index)
             {
-                var current = sets[index];
-                var next = sets[index + 1];
+                var next = sets[index];
 
-                if (current.end >= next.beginning)
+                if (EndToCompare >= next.beginning)
                 {
-                    if (current.end < next.end)
+                    if (EndToCompare < next.end)
                     {
-                       next.beginning = current.beginning;
-                        
-                       sets.Remove(current);
-                    }
-                    else
-                    {
-                        next.beginning = current.beginning;
-                        next.end = current.end;
-                        
-                        sets.Remove(current);
-
+                        result[result.Count - 1].end = next.end;                     
                     }
                 }
                 else
-                {       
-                    index++;                 
-                    if (index == sets.Count - 1)
-                        break;
-                }
+                    result.Add(new Set(next.beginning, next.end));
+
+                index++;
+                EndToCompare = result[result.Count - 1].end;
+     
             }
 
             stopwatch.Stop();
-            
-            Console.WriteLine($"Wynik:{stopwatch.ElapsedMilliseconds}");
 
-            Console.WriteLine(Environment.NewLine +"Wynik:");
-
-            for (int i = 0; i < sets.Count; i++)
+            Console.WriteLine("Wynik:");
+            for(int i=0;i<result.Count;i++)
             {
-                Console.WriteLine($"{i}. {sets[i].beginning} {sets[i].end}");
+                Console.WriteLine($"{i}. {result[i].beginning} {result[i].end}");
             }
+            Console.WriteLine($"Czas przygotowywania wyniku:{stopwatch.ElapsedMilliseconds}");
+
+            //stopwatch.Start();
+
+            //while (sets.Count != index + 1) 
+            //{
+            //    var current = sets[index];
+            //    var next = sets[index + 1];
+
+            //    if (current.end >= next.beginning)
+            //    {
+            //        if (current.end < next.end)
+            //        {
+            //           next.beginning = current.beginning;
+                        
+            //           sets.Remove(current);
+            //        }
+            //        else
+            //        {
+            //            next.beginning = current.beginning;
+            //            next.end = current.end;
+                        
+            //            sets.Remove(current);
+
+            //        }
+            //    }
+            //    else
+            //    {       
+            //        index++;                 
+            //        if (index == sets.Count - 1)
+            //            break;
+            //    }
+            //}
+
+            //stopwatch.Stop();
+            
+            //Console.WriteLine($"Wynik:{stopwatch.ElapsedMilliseconds}");
+
+            //Console.WriteLine(Environment.NewLine +"Wynik:");
+
+            //for (int i = 0; i < sets.Count; i++)
+            //{
+            //    Console.WriteLine($"{i}. {sets[i].beginning} {sets[i].end}");
+            //}
 
         }
     }
